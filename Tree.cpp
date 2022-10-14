@@ -101,7 +101,6 @@ int Tree::TreeSize() {
 }
 
  //removes all nodes with no memory leaks
-//credit to: https://www.geeksforgeeks.org/write-a-c-program-to-delete-a-tree/
 void Tree::ClearTree(Node* t) {
 	if (t == NULL) return;
 	ClearTree(t->left);
@@ -292,8 +291,3 @@ int Tree::getBalance(Node* n) {
 		return b;
 	}
 }
-
-
-//source: https://www.geeksforgeeks.org/avl-tree-set-1-insertion/
-
-//Prints a diagram of the 
