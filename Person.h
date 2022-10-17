@@ -5,12 +5,13 @@
 #include <string>
 using namespace std;
 
-class Node {
+class Person {
 public:
-	Node* left, * right;
+	Person* left, * right;
 	string first, last;
-    int num, height;
-	Node(string fi, string l, int n) {
+    double num; 
+	int height;
+	Person(string fi, string l, double n) {
 		first = fi;
         last = l;
         num = n;

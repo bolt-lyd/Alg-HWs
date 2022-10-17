@@ -1,28 +1,28 @@
-#include "Tree.h"
+#include "Book.h"
 #include <iostream>
 using namespace std;
 
 //default constructor
-Tree::Tree() {
+Book::Book() {
 	root = NULL;
 }
 
 //destructor - empty all items from tree
-Tree::~Tree() {
+Book::~Book() {
 	EmptyTree();
 }
 
 //takes string, finds correct place, inserts it
-void Tree::Insert(string fi, string l, int n) {
+void Book::Add(string fi, string l, double n) {
 	//checks root value and sets x as root if none
 	if (root == NULL) {
-		root = new Node(fi, l, n);
+		root = new Person(fi, l, n);
 	}
 	//if root there, finds new place
 	else {
 		//find
-		Node* temp = root;
-		Node* gp = temp;
+		Person* temp = root;
+		Person* gp = temp;
 		while ((temp->left != NULL && temp->last > l) ||
 			(temp->right != NULL && temp->last < l)) {
 			if (temp->last > l) {
@@ -36,10 +36,10 @@ void Tree::Insert(string fi, string l, int n) {
 		}
 		//insert
 		if (temp->last > l) {
-			temp->left = new Node(fi, l, n);
+			temp->left = new Person(fi, l, n);
 		}
 		else {
-			temp->right = new Node(fi, l, n);
+			temp->right = new Person(fi, l, n);
 		}
 		//update height of parent
 		temp->height = 1 + max(getHeight(temp->left),
@@ -69,8 +69,8 @@ void Tree::Insert(string fi, string l, int n) {
 
 //finds string, locats and returns string
 //returns empty string if not found
-int Tree::FindNum(string fi, string l) {
-	Node* temp = root;
+double Book::Find(string fi, string l) {
+	Person* temp = root;
 	while (temp != NULL && temp->last != l) {
 		if (temp->last > l) {
 			temp = temp->left;
@@ -96,26 +96,26 @@ int Tree::FindNum(string fi, string l) {
 }
 
 //returns number of items in tree
-int Tree::TreeSize() {
+int Book::TreeSize() {
 	return NumNode;
 }
 
  //removes all nodes with no memory leaks
-void Tree::ClearTree(Node* t) {
+void Book::ClearTree(Person* t) {
 	if (t == NULL) return;
 	ClearTree(t->left);
 	ClearTree(t->right);
 	delete t;
 }
 
-void Tree::EmptyTree() {
+void Book::EmptyTree() {
 	ClearTree(root);
 }
 
 //removes given string from tree and returns it
-void Tree::Remove(string fi, string l) {
+void Book::Delete(string fi, string l) {
 
-	Node* temp = root;
+	Person* temp = root;
 	//find int
 	while ((temp->last > l && temp->left->last != l) ||
 		(temp->last < l && temp->right->last != l)) {
@@ -138,10 +138,10 @@ void Tree::Remove(string fi, string l) {
 	//root removal
 	if (root->last == l) {
 		//las = root->last;
-		Node* temp2 = temp->left;
+		Person* temp2 = temp->left;
 		//two children
 		if ((temp->left != NULL) && (temp->right != NULL)) {
-			Node* t = temp2;
+			Person* t = temp2;
 			while (t->right != NULL) {
 				t = t->right;
 			}
@@ -165,11 +165,11 @@ void Tree::Remove(string fi, string l) {
 	}
 	if (temp->last > l) {
 		//las = temp->left->last;
-		Node* temp2 = temp->left;
+		Person* temp2 = temp->left;
 		//two children
 		if ((temp->left->left != NULL) && (temp->left->right != NULL)) {
-			Node* t = temp2;
-			Node* p = t;
+			Person* t = temp2;
+			Person* p = t;
 			while (t->right != NULL) {
 				p = t;
 				t = t->right;
@@ -195,11 +195,11 @@ void Tree::Remove(string fi, string l) {
 	}
 	else if (temp->last < l) {
 		//las = temp->right->last;
-		Node* temp2 = temp->right;
+		Person* temp2 = temp->right;
 		//two children
 		if ((temp->right->right != NULL) && (temp->right->left != NULL)) {
-			Node* t = temp2;
-			Node* p = t;
+			Person* t = temp2;
+			Person* p = t;
 			while (t->left != NULL) {
 				p = t;
 				t = t->left;
@@ -234,19 +234,19 @@ void Tree::Remove(string fi, string l) {
 }
 
 //prints the tree in alphabetical order
-void Tree::Print(Node* t) {
+void Book::Print(Person* t) {
 	if (t == NULL) return;
 	Print(t->left);
 	cout << t->last << endl;
 	Print(t->right);
 }
 
-void Tree::PrintTree() {
+void Book::PrintTree() {
 	Print(root);
 }
 
 //gets height of specific nodes of tree
-int Tree::getHeight(Node* temp) {
+int Book::getHeight(Person* temp) {
 	if (temp == NULL) {
 		return 0;
 	}
@@ -256,7 +256,7 @@ int Tree::getHeight(Node* temp) {
 }
 
 //max of two ints
-int Tree::max(int a, int b) {
+int Book::max(int a, int b) {
 	if (a > b) {
 		return a;
 	}
@@ -265,8 +265,8 @@ int Tree::max(int a, int b) {
 
 //rotates tree to right 
 //from given node
-void Tree::rRotate(Node* gp, Node* p) {
-	Node* pivot = p->left;
+void Book::rRotate(Person* gp, Person* p) {
+	Person* pivot = p->left;
 	gp->left = pivot;
 	p->left = pivot->right;
 	pivot->right = p;
@@ -274,15 +274,15 @@ void Tree::rRotate(Node* gp, Node* p) {
 
 //rotates tree to left
 //from given node
-void Tree::lRotate(Node* gp, Node* p) {
-	Node* pivot = p->right;
+void Book::lRotate(Person* gp, Person* p) {
+	Person* pivot = p->right;
 	gp->right = pivot;
 	p->right = pivot->left;
 	pivot->left = p;
 }
 
 //find balance factor of given node
-int Tree::getBalance(Node* n) {
+int Book::getBalance(Person* n) {
 	if (n == NULL) {
 		return 0;
 	}
