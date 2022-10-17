@@ -1,5 +1,6 @@
 #include "Book.h"
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 //default constructor
@@ -7,9 +8,9 @@ Book::Book() {
 	root = NULL;
 }
 
-//destructor - empty all items from tree
+//destructor - empty all items from phonebook
 Book::~Book() {
-	EmptyTree();
+	EmptyBook();
 }
 
 //takes string, finds correct place, inserts it
@@ -67,8 +68,8 @@ void Book::Add(string fi, string l, double n) {
 	NumNode++;
 }
 
-//finds string, locats and returns string
-//returns empty string if not found
+//finds a person and returns their phone number
+// returns empty string if not found
 double Book::Find(string fi, string l) {
 	Person* temp = root;
 	while (temp != NULL && temp->last != l) {
@@ -95,24 +96,24 @@ double Book::Find(string fi, string l) {
 	}
 }
 
-//returns number of items in tree
-int Book::TreeSize() {
+//returns number of people in phonebook
+int Book::BookSize() {
 	return NumNode;
 }
 
- //removes all nodes with no memory leaks
-void Book::ClearTree(Person* t) {
+//removes all nodes with no memory leaks
+void Book::ClearBook(Person* t) {
 	if (t == NULL) return;
-	ClearTree(t->left);
-	ClearTree(t->right);
+	ClearBook(t->left);
+	ClearBook(t->right);
 	delete t;
 }
 
-void Book::EmptyTree() {
-	ClearTree(root);
+void Book::EmptyBook() {
+	ClearBook(root);
 }
 
-//removes given string from tree and returns it
+//removes given person from phonebook and returns it
 void Book::Delete(string fi, string l) {
 
 	Person* temp = root;
@@ -233,19 +234,19 @@ void Book::Delete(string fi, string l) {
 	//return las;
 }
 
-//prints the tree in alphabetical order
+//prints the phonebook in alphabetical order
 void Book::Print(Person* t) {
 	if (t == NULL) return;
 	Print(t->left);
-	cout << t->last << endl;
+	cout << t->first << " " << t->last << ": " << t->num << endl;
 	Print(t->right);
 }
 
-void Book::PrintTree() {
+void Book::Display() {
 	Print(root);
 }
 
-//gets height of specific nodes of tree
+//gets height of specific nodes of phonebook
 int Book::getHeight(Person* temp) {
 	if (temp == NULL) {
 		return 0;
@@ -253,6 +254,36 @@ int Book::getHeight(Person* temp) {
 	else {
 		return temp->height;
 	}
+}
+
+//Changes the number of a given person in the book
+void Book::Change(string fi, string l, double n){
+Person* temp = root;
+	while (temp != NULL && temp->last != l) {
+		if (temp->last > l) {
+			temp = temp->left;
+		}
+		else if (temp->last < l){
+			temp = temp->right;
+		}
+        else{
+            if (temp->first > fi){
+                temp = temp->left;
+            }
+            else{
+                temp = temp->right;
+            }
+        }
+	}
+	if (temp == NULL) {
+		cout << "That person does not exist in the book. Please try again." << endl;
+		return;
+	}
+	else {
+		temp->num = n;
+		cout << "The person: " << temp->first << " " << temp->last << "'s number has been changes to: " << temp->num << endl;
+		return;
+	}	
 }
 
 //max of two ints
@@ -263,7 +294,7 @@ int Book::max(int a, int b) {
 	return b;
 }
 
-//rotates tree to right 
+//rotates book to right 
 //from given node
 void Book::rRotate(Person* gp, Person* p) {
 	Person* pivot = p->left;
@@ -272,7 +303,7 @@ void Book::rRotate(Person* gp, Person* p) {
 	pivot->right = p;
 }
 
-//rotates tree to left
+//rotates book to left
 //from given node
 void Book::lRotate(Person* gp, Person* p) {
 	Person* pivot = p->right;
@@ -290,4 +321,25 @@ int Book::getBalance(Person* n) {
 		int b = getHeight(n->left) - getHeight(n->right);
 		return b;
 	}
+}
+
+//prints the phonebook in alphabetical order
+void Book::PrintToFile(Person* t) {
+	if (t == NULL) return;
+	PrintToFile(t->left);
+	ofstream myFile;
+	myFile.open ("SaveBook.txt", ios::out | ios::app | ios::binary);
+	myFile << t->first << " " << t->last << ": " << t->num << endl;
+	myFile.close();
+	PrintToFile(t->right);
+}
+
+/// Saves the tree to a txt file and then destroys the book
+void Book::Quit(){
+	ofstream myFile;
+	myFile.open ("SaveBook.bin");
+	myFile << "" << endl;
+	myFile.close();
+	PrintToFile(root);
+	ClearBook(root);
 }
